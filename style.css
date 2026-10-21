@@ -51,9 +51,15 @@ header p {
     transition: transform 0.2s;
 }
 
-.caixa_produto:hover {
-    transform: translateY(-5px);
-    border-color: #f39c12;
+.caixa_produto {
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 2px solid #333;
+    border-radius: 8px;
+    width: 200px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    transition: transform 0.2s;
 }
 
 .caixa_titulo {
