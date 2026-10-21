@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Os Cavaleiros do Zodíaco</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Barra de Navegação (Menu com botões) -->
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#cardProdutos">Personagens</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>Os Cavaleiros do Zodíaco</h1>
+        <p>Projeto de Extensão / Desenvolvimento Front-End - By Jefferson Gomes</p>
+    </header>
+
+    <main>
+        <!-- Onde os cards dos cavaleiros vão ser inseridos via JavaScript -->
+        <div id="cardProdutos" class="container-cards"></div>
+    </main>
+
+    <script>
+        const getDadosAPI = async function() {
+            let url = 'https://back-end-saint-seiya-api.onrender.com/v1/saint-seiya/characters';
+            try {
+                let response = await fetch(url);
+                let dados = await response.json();
+                return dados;
+            } catch (error) {
+                console.error("Erro ao buscar dados da API:", error);
+                return [];
+            }
+        };
+
+        const setCarregarDados = async function() {
+            let dadosAPI = await getDadosAPI();
+            let div_cardProdutos = document.getElementById('cardProdutos');
+            
+            div_cardProdutos.innerHTML = "";
+
+            let listaPersonagens = Array.isArray(dadosAPI) ? dadosAPI : (dadosAPI.characters || dadosAPI.data || []);
+
+            if (listaPersonagens.length === 0) {
+                div_cardProdutos.innerHTML = "<p style='color: #fff; text-align: center; width: 100%;'>A carregar dados do servidor...</p>";
+                return;
+            }
+
+            listaPersonagens.forEach(function(item) {
+                let div_caixa_produto = document.createElement('div');
+                let h2_caixa_titulo = document.createElement('h2');
+                let figure_caixa_imagem = document.createElement('figure');
+                let img = document.createElement('img');
+                let div_caixa_texto = document.createElement('div');
+
+                div_caixa_produto.setAttribute('class', 'caixa_produto');
+                h2_caixa_titulo.setAttribute('class', 'caixa_titulo');
+                figure_caixa_imagem.setAttribute('class', 'caixa_imagem');
+                div_caixa_texto.setAttribute('class', 'caixa_texto');
+
+                img.setAttribute('src', item.image || '');
+                img.setAttribute('alt', item.name || 'Cavaleiro');
+                img.setAttribute('title', item.name || 'Cavaleiro');
+
+                h2_caixa_titulo.innerText = item.name || 'Desconhecido';
+                div_caixa_texto.innerText = "Nível: " + (item.rank || "Guerreiro");
+
+                div_cardProdutos.appendChild(div_caixa_produto);
+                div_caixa_produto.appendChild(h2_caixa_titulo);
+                div_caixa_produto.appendChild(figure_caixa_imagem);
+                figure_caixa_imagem.appendChild(img);
+                div_caixa_produto.appendChild(div_caixa_texto);
+            });
+        };
+
+        setCarregarDados();
+    </script>
+</body>
+</html>
